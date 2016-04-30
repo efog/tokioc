@@ -25,9 +25,9 @@ function Tokioc() {
      */
     function resolve(name, callback, ancestors) {
         if (!self.registrations[name]) { throw 'unknown registration for ' + name + (ancestors && typeof (ancestors) === Array) ? ancestors.join(' <-- ') : ''; }
-        if (typeof (self.registrations[name].target) !== 'function') { callback(resolveInstance(name).target); }
+        if (typeof (self.registrations[name].target) !== 'function') { return callback(resolveInstance(name).target); }
         else {
-            resolveReference(name, !ancestors ? [] : ancestors, callback);
+            return resolveReference(name, !ancestors ? [] : ancestors, callback);
         }
     }
     self.resolve = resolve;
@@ -57,15 +57,16 @@ function Tokioc() {
         }
         ancestors.push(name);
         var resolvedDependencies = [];
+        var resolutionCallback = function (resolved) {
+            resolvedDependencies.push(resolved);
+            if (resolvedDependencies.length === dependencies.length) {
+                var instance = new registration.target();
+                registration.target.apply(instance, resolvedDependencies);
+                return callback(instance);
+            }
+        };
         for (var j = 0; j < dependencies.length; j++) {
-            self.resolve(dependencies[j], function (resolved) {
-                resolvedDependencies.push(resolved);
-                if (resolvedDependencies.length === dependencies.length) {
-                    var instance = new registration.target();
-                    registration.target.apply(instance, resolvedDependencies);
-                    callback(instance);
-                }
-            }, ancestors);
+            self.resolve(dependencies[j], resolutionCallback, ancestors);
         }
     }
     /**
