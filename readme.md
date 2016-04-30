@@ -13,14 +13,16 @@ var ioc = require('tokioc');
 3. Registration
 
    Tokioc supports the registration of objects and constructors.
-####Object registration
+
+   #####Object registration
 ```javascript
 var target = {
     propA: 'propA'
 };
 ioc.register('objByNameSingleInstance', target);
 ```
-####Constructor registration
+
+   #####Constructor registration
 ```javascript
 var Target = function () {
     var self = this;
