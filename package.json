@@ -4,7 +4,7 @@
   "description": "Another simple IOC",
   "main": "tokioc.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "istanbul cover node_modules/jasmine/bin/jasmine.js"
   },
   "keywords": [
     "simple",
@@ -21,6 +21,8 @@
     "gulp": "^3.9.1",
     "gulp-jscs": "^3.0.2",
     "gulp-jshint": "^2.0.0",
+    "istanbul": "^0.4.3",
+    "jasmine": "^2.4.1",
     "jscs": "^3.0.3",
     "jshint": "^2.9.2"
   }
