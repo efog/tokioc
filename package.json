@@ -1,0 +1,27 @@
+{
+  "name": "tokioc",
+  "version": "0.0.1",
+  "description": "Another simple IOC",
+  "main": "tokioc.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [
+    "simple",
+    "ioc",
+    "another"
+  ],
+  "author": "Étienne Brouillard",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/efog/tokioc",
+    "type": "git"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-jscs": "^3.0.2",
+    "gulp-jshint": "^2.0.0",
+    "jscs": "^3.0.3",
+    "jshint": "^2.9.2"
+  }
+}
