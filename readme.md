@@ -42,8 +42,9 @@ var Obj2 = function (obj1) {
     var self = this;
     self.obj1 = obj1;
 };
-Obj1.$dependencies = ['objByRef5'];
-Obj2.$dependencies = ['objByRef4'];
+ioc.register('objByNameCtor', Target);
+ioc.register('objByNameCtor2', Target);
+Obj1.$dependencies = ['objByNameCtor2'];
 ```
 Keep in mind that the constructor dependencies are applied in the order of the $dependencies array.
 ####Resolution
