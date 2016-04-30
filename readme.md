@@ -4,17 +4,17 @@ ________________________________________
 [![Code Climate](https://codeclimate.com/github/efog/tokioc/badges/gpa.svg)](https://codeclimate.com/github/efog/tokioc)[![Test Coverage](https://codeclimate.com/github/efog/tokioc/badges/coverage.svg)](https://codeclimate.com/github/efog/tokioc/coverage)[![Issue Count](https://codeclimate.com/github/efog/tokioc/badges/issue_count.svg)](https://codeclimate.com/github/efog/tokioc)
 ________________________________________
 ###How to use
-1. Install tokioc
+####Install tokioc
         npm install tokioc
-2. Get Tokioc container instance
+####Get Tokioc container instance
 ```javascript
 var ioc = require('tokioc');
 ```
-3. Registration
+####Registration
 
    Tokioc supports the registration of objects and constructors.
 
-   #####Object registration
+#####Object registration
 ```javascript
 var target = {
     propA: 'propA'
@@ -22,7 +22,7 @@ var target = {
 ioc.register('objByNameSingleInstance', target);
 ```
 
-   #####Constructor registration
+#####Constructor registration
 ```javascript
 var Target = function () {
     var self = this;
@@ -30,9 +30,9 @@ var Target = function () {
 };
 ioc.register('objByNameCtor', Target);
 ```
-4. Dependencies
+####Dependencies
 
-   Dependencies can only be declared on constructor registrations. Declare dependencies this way:
+Dependencies can only be declared on constructor registrations. Declare dependencies this way:
 ```javascript
 var Obj1 = function (obj2) {
     var self = this;
@@ -46,9 +46,9 @@ Obj1.$dependencies = ['objByRef5'];
 Obj2.$dependencies = ['objByRef4'];
 ```
 Keep in mind that the constructor dependencies are applied in the order of the $dependencies array.
-5. Resolution
+####Resolution
 
-   Resolve using the resolve method:
+Resolve using the resolve method:
    
 ```javascript
 ioc.resolve('objByRef5', function (instance) { /* Do what you will with the resolution */ });
