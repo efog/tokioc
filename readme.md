@@ -4,7 +4,7 @@ ________________________________________
 [![Code Climate](https://codeclimate.com/github/efog/tokioc/badges/gpa.svg)](https://codeclimate.com/github/efog/tokioc)[![Issue Count](https://codeclimate.com/github/efog/tokioc/badges/issue_count.svg)](https://codeclimate.com/github/efog/tokioc)
 ________________________________________
 ###How to use
-####Install tokioc
+####Install Tokioc
         npm install tokioc
 ####Get Tokioc container instance
 ```javascript
