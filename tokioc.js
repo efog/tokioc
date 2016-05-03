@@ -1,20 +1,70 @@
 'use strict';
 function Tokioc() {
+    var _containerLifetimeResolutionManager;
+    /**
+     *  Container lifetime manager
+     */
+    var ContainerLifetimeResolutionManager = function () {
+        var _instances = {};
+        function setInstance(name, target) {
+            _instances[name] = target;
+        }
+        /**
+         * Gets instance by name
+         */
+        function getInstance(name) {
+            return _instances[name];
+        }
+        this.setInstance = setInstance;
+        this.getInstance = getInstance;
+    };
+    /**
+     * Registration class
+     * @param name registration name
+     * @param target IOC registration target
+     * @param dependencies dependencies array
+     * @param container ioc parent conainer
+     */
+    var Registration = function (name, target, dependencies, lifetimeManager) {
+        this._name = name;
+        this._target = target;
+        this._dependencies = dependencies;
+        this._lifetimeManager = lifetimeManager;
+
+        Object.defineProperty(this, 'name', {
+            get: function () { return this._name; }
+        });
+        Object.defineProperty(this, 'target', {
+            get: function () { return this._target; }
+        });
+        Object.defineProperty(this, 'dependencies', {
+            get: function () { return this._dependencies; }
+        });
+        Object.defineProperty(this, 'lifetimeManager', {
+            get: function () { return this._lifetimeManager; },
+            set: function (value) { this._lifetimeManager = value; }
+        });
+        return this;
+    };
 
     var self = this;
     self.registrations = {};
-    self.names = [];
     /**
      * Registers target resource by name
      * @param name registration name
      * @param target target registered
+     * @return registration object
      */
-    function register(name, target) {
+    function register(name, target, lifetimeManager) {
         if (!name) { throw new Error('name is required'); }
         if (!target) { throw new Error('target is required'); }
         if (self.registrations[name]) { throw new Error('duplicate registration of ' + name); }
-        self.registrations[name] = { name: name, target: target, dependencies: target.$dependencies };
-        self.names.push(name);
+
+        lifetimeManager = !lifetimeManager ? _containerLifetimeResolutionManager : lifetimeManager;
+        var registration = new Registration(name, target, target.$dependencies, lifetimeManager);
+        self.registrations[name] = registration;
+
+        return registration;
     }
     self.register = register;
     /**
@@ -24,10 +74,21 @@ function Tokioc() {
      * @param ancestors array of parents
      */
     function resolve(name, callback, ancestors) {
-        if (!self.registrations[name]) { throw 'unknown registration for ' + name + (ancestors && typeof (ancestors) === Array) ? ancestors.join(' <-- ') : ''; }
-        if (typeof (self.registrations[name].target) !== 'function') { return callback(resolveInstance(name).target); }
+        var registration = self.registrations[name];
+        var resolveCallback = function (instance) {
+            registration.lifetimeManager.setInstance(name, instance);
+            return callback(instance);
+        };
+        if (!registration) { throw 'unknown registration for ' + name + (ancestors && typeof (ancestors) === Array) ? ancestors.join(' <-- ') : ''; }
+        var lifetimeInstance = registration.lifetimeManager.getInstance(name);
+        if (lifetimeInstance) {
+            return resolveCallback(lifetimeInstance);
+        }
+        if (typeof (registration.target) !== 'function') {
+            return resolveCallback(resolveInstance(name).target);
+        }
         else {
-            return resolveReference(name, !ancestors ? [] : ancestors, callback);
+            return resolveReference(name, !ancestors ? [] : ancestors, resolveCallback);
         }
     }
     self.resolve = resolve;
@@ -78,5 +139,9 @@ function Tokioc() {
         return (self.registrations[name]) !== undefined;
     }
     self.hasRegistration = hasRegistration;
+    /**
+     * Activation
+     */
+    _containerLifetimeResolutionManager = new ContainerLifetimeResolutionManager(this);
 }
 module.exports = new Tokioc();
