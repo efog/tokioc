@@ -1,6 +1,6 @@
 {
   "name": "tokioc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Another simple IOC",
   "main": "tokioc.js",
   "scripts": {

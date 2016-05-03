@@ -1,7 +1,7 @@
 #Tokioc
 ##A very simple IOC container for NodeJS
 ________________________________________
-[![Code Climate](https://codeclimate.com/github/efog/tokioc/badges/gpa.svg)](https://codeclimate.com/github/efog/tokioc)[![Test Coverage](https://codeclimate.com/github/efog/tokioc/badges/coverage.svg)](https://codeclimate.com/github/efog/tokioc/coverage)[![Issue Count](https://codeclimate.com/github/efog/tokioc/badges/issue_count.svg)](https://codeclimate.com/github/efog/tokioc)
+[![Code Climate](https://codeclimate.com/github/efog/tokioc/badges/gpa.svg)](https://codeclimate.com/github/efog/tokioc)[![Issue Count](https://codeclimate.com/github/efog/tokioc/badges/issue_count.svg)](https://codeclimate.com/github/efog/tokioc)
 ________________________________________
 ###How to use
 ####Install tokioc
@@ -29,6 +29,32 @@ var Target = function () {
     self.now = new Date();
 };
 ioc.register('objByNameCtor', Target);
+```
+####Customizable lifetime manager
+Tokioc comes by default with a simple instance manager which caches resolved instances. Lifetime managers can be customized for different purposes. 
+Lifetime managers must support setInstance and getInstance methods.
+```javascript
+/**
+ *  Container lifetime manager
+ */
+var ContainerLifetimeResolutionManager = function () {
+    var _instances = {};
+    function setInstance(name, target) {
+        _instances[name] = target;
+    }
+    /**
+     * Gets instance by name
+     */
+    function getInstance(name) {
+        return _instances[name];
+    }
+    this.setInstance = setInstance;
+    this.getInstance = getInstance;
+};
+```
+Register a dependency with a custom lifetime manager:
+```javascript
+ioc.register('objByNameCtor', Target, new CustomLifetimeManager());
 ```
 ####Dependencies
 
